@@ -37,6 +37,16 @@ To generate the necessary static files AND the example below:
 
   rails generate event_calendar
 
+=== Rails >= 3.1
+
+Add this to your Gemfile:
+  
+  gem 'event-calendar', :require => 'event_calendar'
+
+To generate the necessary static files AND the example below:
+
+  rails generate event_calendar --use-asset-pipeline
+
 === Generator Options
 
   script/generate event_calendar --help
@@ -45,6 +55,7 @@ To generate the necessary static files AND the example below:
   --use-jquery: Generate jQuery javascript
   --use-mootools: Generate MooTools javascript
   --use-all-day: Include an 'all_day' field on events, and display appropriately
+  --use-asset-pipeline: Place js/css in app/assets instead of public.  If you're using Rails >= 3.1 you should include this
 
 You can change the default event model name (Event) and controller/view name (Calendar) by passing in two name arguments:
 

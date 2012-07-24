@@ -1,12 +1,16 @@
 Usage:
 
+    Rails < 3.0
     script/generate event_calendar [EVENT_MODEL VIEW_NAME]
+
+    Rails > 3.0
+    rails generate event_calendar
 
   This will create:
       
     # static files
-      public/stylesheets/event_calendar.css
-      public/javascripts/event_calendar.js
+      (app/assets|public)/stylesheets/event_calendar.css
+      (app/assets|public)public/javascripts/event_calendar.js
       
     # Unless --static-only option is given
     # MVC and supporting files (depending on model and view name)

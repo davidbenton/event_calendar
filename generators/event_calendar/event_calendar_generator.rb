@@ -4,7 +4,8 @@ class EventCalendarGenerator < Rails::Generator::Base
   default_options :static_only => false,
                   :use_jquery =>  false,
                   :use_all_day => false,
-                  :use_mootools => false
+                  :use_mootools => false,
+                  :use_asset_pipeline => false
   
   attr_reader :class_name, :view_name
   
@@ -18,10 +19,11 @@ class EventCalendarGenerator < Rails::Generator::Base
   def manifest
     record do |m|
       # static files
-      m.file "stylesheet.css", "public/stylesheets/event_calendar.css"
+      raise public_folder
+      m.file "stylesheets.css", "#{public_folder}/stylesheets/event_calendar.css"
       
       script = options[:use_jquery] ? 'jq_javascript.js' : (options[:use_mootools] ? 'mt_javascript.js' : 'javascript.js')
-      m.file script, "public/javascripts/event_calendar.js"
+      m.file script, "#{public_folder}/javascripts/event_calendar.js"
       
       # MVC and other supporting files
       unless options[:static_only]
@@ -49,5 +51,12 @@ class EventCalendarGenerator < Rails::Generator::Base
     end
     opt.on("--use-all-day",
       "Include an 'all_day' field on events, and display appropriately.") { |v| options[:use_all_day] = v }
+    opt.on("--use-asset_pipeline",
+      "Place js/css in app/assets instead of public") { |v| options[:use_asset_pipeline] = v}
   end
+
+  def public_folder
+    options[:use_asset_pipeline] ? "app/assets" : "public"
+  end
+
 end

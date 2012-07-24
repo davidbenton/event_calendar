@@ -14,23 +14,24 @@ class EventCalendarGenerator < Rails::Generators::Base
   end
   class_option :use_all_day,  :type => :boolean, :default => false, :desc => "Add an additional 'all_day' attribute"
   class_option :use_color,    :type => :boolean, :default => false, :desc => "Add an additional 'color' attribute"
+  class_option :use_asset_pipeline, :type => :boolean, :default => false, :desc => "Place assets in app/assets instead of public folder"
   
   def do_it
     say "Adding an all_day column", :yellow if options[:use_all_day]
     say "Adding a color column", :yellow if options[:use_color]
-
+    say "Placing js/css in app/assets", :yellow if options[:use_asset_pipeline]
     if options[:use_jquery]
       say "Using jQuery for scripting", :yellow
-      copy_file 'jq_javascript.js', "public/javascripts/event_calendar.js"
+      copy_file 'jq_javascript.js', "#{public_folder}/javascripts/event_calendar.js"
     elsif options[:use_mootools]
       say "Using MooTools for scripting", :yellow
-      copy_file "mt_javascript.js", "public/javascripts/event_calendar.js"
+      copy_file "mt_javascript.js", "#{public_folder}/javascripts/event_calendar.js"
     else
       say "Using Prototype for scripting", :yellow
-      copy_file 'javascript.js', "public/javascripts/event_calendar.js"
+      copy_file 'javascript.js', "#{public_folder}/javascripts/event_calendar.js"
     end
 
-    copy_file "stylesheet.css", "public/stylesheets/event_calendar.css"
+    copy_file "stylesheet.css", "#{public_folder}/stylesheets/event_calendar.css"
 
     unless options.static_only?
       template "model.rb.erb", "app/models/#{model_name}.rb"
@@ -42,6 +43,10 @@ class EventCalendarGenerator < Rails::Generators::Base
       route "match '/#{view_name}(/:year(/:month))' => '#{view_name}#index', :as => :#{named_route_name}, :constraints => {:year => /\\d{4}/, :month => /\\d{1,2}/}"
     end
 
+  end
+
+  def public_folder
+    options[:use_asset_pipeline] ? "app/assets" : "public"
   end
 
   def model_class_name
